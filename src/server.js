@@ -1,23 +1,42 @@
-
 import express from 'express'
-const server= express()
+import fs from'fs'
+import path from 'path'
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const server = express()
+
 //This is an alternative for http.
-// Instead using the express library to take care of the http, request & response objects behind the scenes,
+//Instead using the express library to take care of the http, request & response objects behind the scenes,
 //whist creating an express application for you in the process.
 
 
-const http = require('http')// similar to import,takes name of a package as a string argument an returns the package
+// const http = require('http')// similar to import,takes name of a package as a string argument an returns the package
                             //A http package allows us to perform actions on the server
 
-const fs = require('fs') // Import file System package to interact with files on our server
+// const fs = require('fs') // Import file System package to interact with files on our server
 
 //fs readFilesync reads the content of a file and returns it to us 
-const homePage = fs.readFileSync('./index.html')// the content of index.html is store in homepage, therfore homePage is now equal to <h1>Home Page</h1>
-const aboutPage = fs.readFileSync('./about.html')
-const contactPage = fs.readFileSync('./contact.html')
-const notFoundPage = fs.readFileSync('./notfound.html')
+const homePage = fs.readFileSync('./src/index.html')// the content of index.html is store in homepage, therfore homePage is now equal to <h1>Home Page</h1>
+const aboutPage = fs.readFileSync('./src/about.html')
+const contactPage = fs.readFileSync('./src/contact.html')
+const notFoundPage = fs.readFileSync('./src/notfound.html')
 
 
+server.listen(3000,() =>{ // Port object is defined in the first parameter
+    console.log("Server is listening on Port 3000") //executed as soon as the server starts listening for request
+})
+
+server.get('/',(req,res) =>{
+    console.log(__dirname,'index.html')
+    res.sendFile(path.resolve(__dirname,'index.html'))
+})
+
+server.get("/about",(req, res)=>{
+    res.json({ 
+        name:'Greg Lim'
+    })
+})
 
 //When a request comes in e.g (http://localhost:3000/about) 
 //We handle the request using the req object in the function below
